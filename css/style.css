@@ -194,3 +194,6 @@ form button:hover {
     opacity: 1;
   }
 }
+.tache.hidden {
+  display: none;
+}

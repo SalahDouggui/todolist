@@ -19,3 +19,33 @@ function confirmDeletion(link) {
   }
   return false; // Annuler la suppression si l'utilisateur clique sur "Annuler"
 }
+// Filtrer les tâches dynamiquement
+document.addEventListener("DOMContentLoaded", () => {
+  const prioriteFilter = document.getElementById("filter-priorite");
+  const categorieFilter = document.getElementById("filter-categorie");
+
+  function filterTasks() {
+    const prioriteValue = prioriteFilter.value.toLowerCase();
+    const categorieValue = categorieFilter.value.toLowerCase();
+
+    document.querySelectorAll(".tache").forEach((task) => {
+      const taskPriorite = task.getAttribute("data-priorite").toLowerCase();
+      const taskCategorie = task.getAttribute("data-categorie").toLowerCase();
+
+      // Vérifier si la tâche correspond aux filtres
+      const matchesPriorite = !prioriteValue || taskPriorite === prioriteValue;
+      const matchesCategorie =
+        !categorieValue || taskCategorie === categorieValue;
+
+      if (matchesPriorite && matchesCategorie) {
+        task.classList.remove("hidden");
+      } else {
+        task.classList.add("hidden");
+      }
+    });
+  }
+
+  // Appliquer le filtre à chaque changement
+  prioriteFilter.addEventListener("change", filterTasks);
+  categorieFilter.addEventListener("change", filterTasks);
+});
