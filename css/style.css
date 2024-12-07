@@ -74,17 +74,46 @@ li {
 }
 
 /* Style des tâches */
+/* Conteneur des tâches */
 .tache {
+  display: flex;
+  justify-content: space-between; /* Place les éléments aux extrémités */
+  align-items: center; /* Aligne les éléments verticalement */
   background-color: #ffffff;
   border-radius: 5px;
   padding: 10px;
   margin: 10px 0;
-  transition: transform 0.3s, background-color 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .tache:hover {
-  transform: translateX(5px);
-  background-color: #f1f1f1;
+  transform: translateX(10px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Style des boutons */
+.tache .actions {
+  display: flex;
+  gap: 10px; /* Espace entre les boutons */
+}
+
+/* Boutons avec icônes */
+.tache a {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Espace entre l'icône et le texte */
+}
+.tache a.edit i {
+  color: #007bff;
+}
+
+.tache a.delete i {
+  color: #ff5c5c;
+}
+.tache a:hover i {
+  transform: scale(1.2); /* L'icône grossit légèrement au survol */
+  transition: transform 0.3s;
 }
 
 .tache.hidden {
@@ -122,6 +151,69 @@ a[style="color: red;"] {
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
 }
+/* Style pour le formulaire d'ajout */
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+/* Champ de saisie "Nouvelle tâche" */
+form input[type="text"] {
+  flex: 1; /* Prend toute la largeur disponible */
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+form input[type="text"]:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  outline: none;
+}
+
+/* Style pour les sélecteurs (catégorie/priorité) */
+form select {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f8f9fa;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+form select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  outline: none;
+}
+
+/* Style pour le bouton "Ajouter" */
+form button {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #28a745;
+  border: 1px solid #28a745;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+form button:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+form button:active {
+  background-color: #1e7e34;
+  transform: translateY(0);
+}
 
 .alert.hide {
   opacity: 0;
@@ -142,4 +234,18 @@ a[style="color: red;"] {
     transform: translateY(0);
     opacity: 1;
   }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tache {
+  animation: fadeIn 0.5s ease;
 }

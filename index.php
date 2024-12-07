@@ -80,6 +80,7 @@ $taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDo List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -119,20 +120,28 @@ $taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <button type="submit" name="update_tache">Mettre à jour</button>
             </form>
         <?php else: ?>
-            <form action="index.php" method="POST" style="margin-bottom: 20px;">
+            <form action="index.php" method="POST">
+                <!-- Champ "Nouvelle tâche" -->
                 <input type="text" name="nom_tache" placeholder="Nouvelle tâche" required>
+
+                <!-- Sélecteur de catégorie -->
                 <select name="categorie">
                     <option value="Général">Général</option>
                     <option value="Travail">Travail</option>
                     <option value="Personnel">Personnel</option>
                 </select>
+
+                <!-- Sélecteur de priorité -->
                 <select name="priorite">
                     <option value="Haute">Haute</option>
                     <option value="Moyenne" selected>Moyenne</option>
                     <option value="Basse">Basse</option>
                 </select>
+
+                <!-- Bouton "Ajouter" -->
                 <button type="submit">Ajouter</button>
             </form>
+
         <?php endif; ?>
 
         <!-- Formulaire de filtre -->
@@ -160,18 +169,25 @@ $taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <li class="tache <?= isset($_GET['new']) && $_GET['new'] == $tache['id'] ? 'new' : '' ?>"
                     data-priorite="<?= htmlspecialchars($tache['priorite']) ?>"
                     data-categorie="<?= htmlspecialchars($tache['categorie']) ?>">
-                    <?= htmlspecialchars($tache['nom']) ?>
-                    <span>(<?= htmlspecialchars($tache['categorie']) ?>)</span>
-                    <span style="color: <?= $tache['priorite'] === 'Haute' ? 'red' : ($tache['priorite'] === 'Basse' ? 'green' : 'orange') ?>;">
-                        [<?= htmlspecialchars($tache['priorite']) ?>]
-                    </span>
-                    <a href="index.php?edit=<?= $tache['id'] ?>" style="color: blue;">Modifier</a>
-                    <a href="index.php?delete=<?= $tache['id'] ?>"
-                        class="delete-link"
-                        style="color: red;"
-                        onclick="return confirmDeletion(this);">
-                        Supprimer
-                    </a>
+
+                    <!-- Nom et détails de la tâche -->
+                    <div>
+                        <?= htmlspecialchars($tache['nom']) ?>
+                        <span>(<?= htmlspecialchars($tache['categorie']) ?>)</span>
+                        <span style="color: <?= $tache['priorite'] === 'Haute' ? 'red' : ($tache['priorite'] === 'Basse' ? 'green' : 'orange') ?>;">
+                            [<?= htmlspecialchars($tache['priorite']) ?>]
+                        </span>
+                    </div>
+
+                    <!-- Actions (boutons) -->
+                    <div class="actions">
+                        <a href="index.php?edit=<?= $tache['id'] ?>" class="edit">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                        <a href="index.php?delete=<?= $tache['id'] ?>" class="delete" onclick="return confirmDeletion(this);">
+                            <i class="fas fa-trash-alt"></i> Supprimer
+                        </a>
+                    </div>
                 </li>
             <?php endforeach; ?>
         </ul>
