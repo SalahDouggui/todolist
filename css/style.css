@@ -1,15 +1,15 @@
 /* Corps général */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f8f9fa;
-  color: #212529;
+  background-color: #f8f9fa; /* Gris clair pour le fond */
+  color: #212529; /* Noir légèrement adouci */
   margin: 0;
   padding: 0;
 }
 
 /* Titre principal */
 h1 {
-  color: #007bff;
+  color: #007bff; /* Bleu vif pour le titre */
   text-align: center;
   margin-top: 20px;
 }
@@ -18,10 +18,10 @@ h1 {
 .container {
   width: 80%;
   margin: 20px auto;
-  background: #fff;
+  background: #fff; /* Fond blanc pour contraster avec le fond général */
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px; /* Coins arrondis */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
 }
 
 /* Formulaire */
@@ -30,13 +30,14 @@ form {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  gap: 10px;
 }
 
 form input[type="text"] {
   width: 60%;
   padding: 10px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
+  border: 1px solid #ced4da; /* Bordure grise */
+  border-radius: 4px; /* Coins arrondis */
   font-size: 16px;
 }
 
@@ -59,12 +60,12 @@ form button {
 }
 
 form button:hover {
-  background-color: #0056b3;
+  background-color: #0056b3; /* Bleu foncé au survol */
 }
 
 /* Tableau des tâches */
 ul {
-  list-style-type: none;
+  list-style-type: none; /* Suppression des puces */
   padding: 0;
   margin: 0;
 }
@@ -75,24 +76,22 @@ ul li {
   align-items: center;
   padding: 10px;
   margin-bottom: 10px;
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background: #f8f9fa; /* Fond gris clair */
+  border: 1px solid #dee2e6; /* Bordure fine */
+  border-radius: 4px; /* Coins arrondis */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Ombre subtile */
 }
 
-ul li .terminee {
+/* Style pour les tâches terminées */
+.terminee {
   text-decoration: line-through;
   color: gray;
   font-style: italic;
 }
 
-ul li span {
-  margin-left: 10px;
-}
-
+/* Boutons et liens */
 ul li a {
-  color: #007bff;
+  color: #007bff; /* Bleu pour les liens */
   text-decoration: none;
   font-size: 14px;
   margin-left: 10px;
@@ -100,7 +99,24 @@ ul li a {
 
 ul li a:hover {
   text-decoration: underline;
-  color: #0056b3;
+  color: #0056b3; /* Bleu foncé au survol */
+}
+
+/* Priorités des tâches */
+ul li span {
+  font-weight: bold;
+}
+
+ul li span[data-priorite="Haute"] {
+  color: red;
+}
+
+ul li span[data-priorite="Moyenne"] {
+  color: orange;
+}
+
+ul li span[data-priorite="Basse"] {
+  color: green;
 }
 
 /* Pied de page (optionnel) */
@@ -112,4 +128,32 @@ footer {
   border-top: 1px solid #ddd;
   font-size: 14px;
   color: #666;
+}
+form {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+form select {
+  padding: 5px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+form button {
+  padding: 5px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #0056b3;
 }
