@@ -13,43 +13,38 @@ try {
     die("Erreur de connexion à la base de données : " . $e->getMessage());
 }
 
-// Initialiser les filtres
-$filter_priorite = $_GET['filter_priorite'] ?? '';
-$filter_categorie = $_GET['filter_categorie'] ?? '';
-
-// Construire la requête SQL avec les filtres
-$sql = "SELECT * FROM taches WHERE 1=1";
-
-// Ajouter un filtre pour la priorité
-if (!empty($filter_priorite)) {
-    $sql .= " AND priorite = :priorite";
+// Charger les données d'une tâche pour l'édition
+$edit_tache = null;
+if (isset($_GET['edit'])) {
+    $id = (int) $_GET['edit'];
+    $sql = "SELECT * FROM taches WHERE id = :id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['id' => $id]);
+    $edit_tache = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// Ajouter un filtre pour la catégorie
-if (!empty($filter_categorie)) {
-    $sql .= " AND categorie = :categorie";
+// Mettre à jour une tâche
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_tache'])) {
+    $id = (int) $_POST['id'];
+    $nom_tache = trim($_POST['nom_tache']);
+    $categorie = $_POST['categorie'] ?? 'Général';
+    $priorite = $_POST['priorite'] ?? 'Moyenne';
+
+    $sql = "UPDATE taches SET nom = :nom, categorie = :categorie, priorite = :priorite WHERE id = :id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        'nom' => $nom_tache,
+        'categorie' => $categorie,
+        'priorite' => $priorite,
+        'id' => $id
+    ]);
+
+    header("Location: index.php");
+    exit;
 }
-
-// Ajouter un tri par défaut
-$sql .= " ORDER BY date_creation ASC";
-
-// Préparer et exécuter la requête
-$stmt = $pdo->prepare($sql);
-
-// Associer les valeurs des filtres, si nécessaires
-$params = [];
-if (!empty($filter_priorite)) {
-    $params['priorite'] = $filter_priorite;
-}
-if (!empty($filter_categorie)) {
-    $params['categorie'] = $filter_categorie;
-}
-
-$stmt->execute($params);
-$taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Ajouter une tâche
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['nom_tache'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['nom_tache']) && !isset($_POST['update_tache'])) {
     $nom_tache = trim($_POST['nom_tache']);
     $categorie = $_POST['categorie'] ?? 'Général';
     $priorite = $_POST['priorite'] ?? 'Moyenne';
@@ -72,6 +67,11 @@ if (isset($_GET['delete'])) {
     header("Location: index.php");
     exit;
 }
+
+// Récupérer toutes les tâches
+$sql = "SELECT * FROM taches ORDER BY date_creation ASC";
+$stmt = $pdo->query($sql);
+$taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -87,50 +87,42 @@ if (isset($_GET['delete'])) {
     <div class="container">
         <h1>ToDo List</h1>
 
-        <!-- Formulaire pour ajouter une tâche -->
-        <form action="index.php" method="POST">
-            <input type="text" name="nom_tache" placeholder="Nouvelle tâche" required>
-            <select name="categorie">
-                <option value="Général">Général</option>
-                <option value="Travail">Travail</option>
-                <option value="Personnel">Personnel</option>
-            </select>
-            <select name="priorite">
-                <option value="Haute">Haute</option>
-                <option value="Moyenne" selected>Moyenne</option>
-                <option value="Basse">Basse</option>
-            </select>
-            <button type="submit">Ajouter</button>
-        </form>
-
-        <!-- Formulaire pour filtrer les tâches -->
-        <form action="index.php" method="GET" style="margin-bottom: 20px;">
-            <label for="filter_priorite">Filtrer par priorité :</label>
-            <select name="filter_priorite" id="filter_priorite">
-                <option value="">Toutes</option>
-                <option value="Haute" <?= $filter_priorite === 'Haute' ? 'selected' : '' ?>>Haute</option>
-                <option value="Moyenne" <?= $filter_priorite === 'Moyenne' ? 'selected' : '' ?>>Moyenne</option>
-                <option value="Basse" <?= $filter_priorite === 'Basse' ? 'selected' : '' ?>>Basse</option>
-            </select>
-
-            <label for="filter_categorie">Filtrer par catégorie :</label>
-            <select name="filter_categorie" id="filter_categorie">
-                <option value="">Toutes</option>
-                <option value="Travail" <?= $filter_categorie === 'Travail' ? 'selected' : '' ?>>Travail</option>
-                <option value="Personnel" <?= $filter_categorie === 'Personnel' ? 'selected' : '' ?>>Personnel</option>
-                <option value="Général" <?= $filter_categorie === 'Général' ? 'selected' : '' ?>>Général</option>
-            </select>
-
-            <button type="submit">Appliquer</button>
-        </form>
+        <!-- Formulaire pour ajouter ou modifier une tâche -->
+        <?php if ($edit_tache): ?>
+            <form action="index.php" method="POST" style="margin-bottom: 20px;">
+                <input type="hidden" name="id" value="<?= $edit_tache['id'] ?>">
+                <input type="text" name="nom_tache" value="<?= htmlspecialchars($edit_tache['nom']) ?>" required>
+                <select name="categorie">
+                    <option value="Général" <?= $edit_tache['categorie'] === 'Général' ? 'selected' : '' ?>>Général</option>
+                    <option value="Travail" <?= $edit_tache['categorie'] === 'Travail' ? 'selected' : '' ?>>Travail</option>
+                    <option value="Personnel" <?= $edit_tache['categorie'] === 'Personnel' ? 'selected' : '' ?>>Personnel</option>
+                </select>
+                <select name="priorite">
+                    <option value="Haute" <?= $edit_tache['priorite'] === 'Haute' ? 'selected' : '' ?>>Haute</option>
+                    <option value="Moyenne" <?= $edit_tache['priorite'] === 'Moyenne' ? 'selected' : '' ?>>Moyenne</option>
+                    <option value="Basse" <?= $edit_tache['priorite'] === 'Basse' ? 'selected' : '' ?>>Basse</option>
+                </select>
+                <button type="submit" name="update_tache">Mettre à jour</button>
+            </form>
+        <?php else: ?>
+            <form action="index.php" method="POST" style="margin-bottom: 20px;">
+                <input type="text" name="nom_tache" placeholder="Nouvelle tâche" required>
+                <select name="categorie">
+                    <option value="Général">Général</option>
+                    <option value="Travail">Travail</option>
+                    <option value="Personnel">Personnel</option>
+                </select>
+                <select name="priorite">
+                    <option value="Haute">Haute</option>
+                    <option value="Moyenne" selected>Moyenne</option>
+                    <option value="Basse">Basse</option>
+                </select>
+                <button type="submit">Ajouter</button>
+            </form>
+        <?php endif; ?>
 
         <!-- Liste des tâches -->
         <h2>Mes tâches</h2>
-        <p>
-            <strong>Filtres actifs :</strong>
-            Priorité : <?= !empty($filter_priorite) ? htmlspecialchars($filter_priorite) : 'Toutes' ?>,
-            Catégorie : <?= !empty($filter_categorie) ? htmlspecialchars($filter_categorie) : 'Toutes' ?>
-        </p>
         <ul>
             <?php foreach ($taches as $tache) : ?>
                 <li class="<?= $tache['terminee'] ? 'terminee' : '' ?>">
@@ -139,6 +131,7 @@ if (isset($_GET['delete'])) {
                     <span style="color: <?= $tache['priorite'] === 'Haute' ? 'red' : ($tache['priorite'] === 'Basse' ? 'green' : 'orange') ?>;">
                         [<?= htmlspecialchars($tache['priorite']) ?>]
                     </span>
+                    <a href="index.php?edit=<?= $tache['id'] ?>" style="color: blue;">Modifier</a>
                     <a href="index.php?delete=<?= $tache['id'] ?>" style="color: red;">Supprimer</a>
                 </li>
             <?php endforeach; ?>
