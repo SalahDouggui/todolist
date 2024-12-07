@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_tache'])) {
         'id' => $id
     ]);
 
-    header("Location: index.php");
+    header("Location: index.php?success=update");
     exit;
 }
 
@@ -57,14 +57,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['nom_tache']) && !iss
     exit;
 }
 
-// Supprimer une tâche
+// Supprimer une tâche avec confirmation
 if (isset($_GET['delete'])) {
     $id = (int) $_GET['delete'];
     $sql = "DELETE FROM taches WHERE id = :id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(['id' => $id]);
 
-    header("Location: index.php");
+    header("Location: index.php?success=delete");
     exit;
 }
 
@@ -86,6 +86,17 @@ $taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <div class="container">
         <h1>ToDo List</h1>
+
+        <!-- Afficher les messages de succès -->
+        <?php if (isset($_GET['success'])): ?>
+            <div class="alert alert-success">
+                <?php if ($_GET['success'] === 'update'): ?>
+                    La tâche a été mise à jour avec succès !
+                <?php elseif ($_GET['success'] === 'delete'): ?>
+                    La tâche a été supprimée avec succès !
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
 
         <!-- Formulaire pour ajouter ou modifier une tâche -->
         <?php if ($edit_tache): ?>
@@ -132,7 +143,11 @@ $taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         [<?= htmlspecialchars($tache['priorite']) ?>]
                     </span>
                     <a href="index.php?edit=<?= $tache['id'] ?>" style="color: blue;">Modifier</a>
-                    <a href="index.php?delete=<?= $tache['id'] ?>" style="color: red;">Supprimer</a>
+                    <a href="index.php?delete=<?= $tache['id'] ?>"
+                        style="color: red;"
+                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?');">
+                        Supprimer
+                    </a>
                 </li>
             <?php endforeach; ?>
         </ul>
