@@ -1,176 +1,124 @@
-/* Corps général */
+/* Corps de la page */
 body {
+  background-color: #d6eaf8; /* Bleu clair */
+  color: #333; /* Texte gris foncé */
   font-family: Arial, sans-serif;
-  background-color: #f8f9fa; /* Gris clair pour le fond */
-  color: #212529; /* Noir légèrement adouci */
   margin: 0;
-  padding: 0;
-}
-
-/* Titre principal */
-h1 {
-  color: #007bff; /* Bleu vif pour le titre */
-  text-align: center;
-  margin-top: 20px;
+  padding: 20px;
 }
 
 /* Conteneur principal */
 .container {
-  width: 80%;
-  margin: 20px auto;
-  background: #fff; /* Fond blanc pour contraster avec le fond général */
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  border-radius: 8px; /* Coins arrondis */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
 }
 
-/* Formulaire */
-form {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* Titre principal */
+h1 {
+  text-align: center;
+  color: #007bff;
+  font-size: 24px;
   margin-bottom: 20px;
-  gap: 10px;
 }
 
-form input[type="text"] {
-  width: 60%;
+/* Formulaire de filtre */
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 20px;
   padding: 10px;
-  border: 1px solid #ced4da; /* Bordure grise */
-  border-radius: 4px; /* Coins arrondis */
-  font-size: 16px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
 
-form select {
-  padding: 10px;
-  border: 1px solid #ced4da;
+.filter-form label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #555;
+}
+
+.filter-select {
+  padding: 8px;
+  border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 16px;
+  min-width: 150px;
+  font-size: 14px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-form button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.filter-select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
-form button:hover {
-  background-color: #0056b3; /* Bleu foncé au survol */
-}
-
-/* Tableau des tâches */
+/* Liste des tâches */
 ul {
-  list-style-type: none; /* Suppression des puces */
+  list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
-ul li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+li {
   padding: 10px;
   margin-bottom: 10px;
-  background: #f8f9fa; /* Fond gris clair */
-  border: 1px solid #dee2e6; /* Bordure fine */
-  border-radius: 4px; /* Coins arrondis */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Ombre subtile */
+  border-bottom: 1px solid #ddd;
 }
 
-/* Style pour les tâches terminées */
-.terminee {
-  text-decoration: line-through;
-  color: gray;
-  font-style: italic;
+/* Style des tâches */
+.tache {
+  background-color: #ffffff;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+  transition: transform 0.3s, background-color 0.3s;
 }
 
-/* Boutons et liens */
-ul li a {
-  color: #007bff; /* Bleu pour les liens */
+.tache:hover {
+  transform: translateX(5px);
+  background-color: #f1f1f1;
+}
+
+.tache.hidden {
+  display: none;
+}
+
+/* Liens (Modifier et Supprimer) */
+a {
   text-decoration: none;
-  font-size: 14px;
+  font-weight: bold;
   margin-left: 10px;
 }
 
-ul li a:hover {
+a:hover {
   text-decoration: underline;
-  color: #0056b3; /* Bleu foncé au survol */
 }
 
-/* Priorités des tâches */
-ul li span {
-  font-weight: bold;
+a[style="color: blue;"] {
+  color: #007bff; /* Bleu harmonieux */
 }
 
-ul li span[data-priorite="Haute"] {
-  color: red;
+a[style="color: red;"] {
+  color: #ff5c5c; /* Rouge adouci */
 }
 
-ul li span[data-priorite="Moyenne"] {
-  color: orange;
-}
-
-ul li span[data-priorite="Basse"] {
-  color: green;
-}
-
-/* Pied de page (optionnel) */
-footer {
-  text-align: center;
-  margin-top: 20px;
-  padding: 10px;
-  background: #f1f1f1;
-  border-top: 1px solid #ddd;
-  font-size: 14px;
-  color: #666;
-}
-form {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-form select {
-  padding: 5px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-form button {
-  padding: 5px 15px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-form button:hover {
-  background-color: #0056b3;
-}
+/* Messages d'alerte */
 .alert {
   padding: 15px;
   margin-bottom: 20px;
   border-radius: 4px;
   font-size: 14px;
-}
-
-.alert-success {
-  background-color: #d4edda;
+  background-color: #d4edda; /* Vert clair */
   border: 1px solid #c3e6cb;
   color: #155724;
-}
-/* Animation des messages */
-.alert {
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
 }
@@ -179,7 +127,8 @@ form button:hover {
   opacity: 0;
   pointer-events: none;
 }
-/* Animation pour une nouvelle tâche */
+
+/* Animation pour les nouvelles tâches */
 .tache.new {
   animation: slideIn 0.5s ease;
 }
@@ -193,7 +142,4 @@ form button:hover {
     transform: translateY(0);
     opacity: 1;
   }
-}
-.tache.hidden {
-  display: none;
 }

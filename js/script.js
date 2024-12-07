@@ -5,20 +5,6 @@ setTimeout(() => {
     alert.classList.add("hide");
   }
 }, 3000);
-
-// Confirmation avant suppression d'une tâche
-function confirmDeletion(link) {
-  if (confirm("Êtes-vous sûr de vouloir supprimer cette tâche ?")) {
-    // Ajouter l'animation avant de rediriger
-    const taskItem = link.closest("li");
-    taskItem.classList.add("hide");
-    setTimeout(() => {
-      window.location.href = link.href;
-    }, 500); // Attendre que l'animation se termine
-    return false;
-  }
-  return false; // Annuler la suppression si l'utilisateur clique sur "Annuler"
-}
 // Filtrer les tâches dynamiquement
 document.addEventListener("DOMContentLoaded", () => {
   const prioriteFilter = document.getElementById("filter-priorite");
@@ -32,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const taskPriorite = task.getAttribute("data-priorite").toLowerCase();
       const taskCategorie = task.getAttribute("data-categorie").toLowerCase();
 
-      // Vérifier si la tâche correspond aux filtres
       const matchesPriorite = !prioriteValue || taskPriorite === prioriteValue;
       const matchesCategorie =
         !categorieValue || taskCategorie === categorieValue;
@@ -45,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Appliquer le filtre à chaque changement
   prioriteFilter.addEventListener("change", filterTasks);
   categorieFilter.addEventListener("change", filterTasks);
 });

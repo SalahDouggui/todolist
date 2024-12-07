@@ -54,11 +54,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['nom_tache']) && !iss
     $stmt->execute(['nom' => $nom_tache, 'categorie' => $categorie, 'priorite' => $priorite]);
 
     $lastId = $pdo->lastInsertId();
-    header("Location: index.php?new=$lastId");
+    header("Location: index.php?success=new");
     exit;
 }
-
-// Supprimer une tâche avec confirmation
+// Supprimer une tâche
 if (isset($_GET['delete'])) {
     $id = (int) $_GET['delete'];
     $sql = "DELETE FROM taches WHERE id = :id";
@@ -91,13 +90,16 @@ $taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <!-- Afficher les messages de succès -->
         <?php if (isset($_GET['success'])): ?>
             <div class="alert alert-success">
-                <?php if ($_GET['success'] === 'update'): ?>
+                <?php if ($_GET['success'] === 'new'): ?>
+                    La tâche a été ajoutée avec succès !
+                <?php elseif ($_GET['success'] === 'update'): ?>
                     La tâche a été mise à jour avec succès !
                 <?php elseif ($_GET['success'] === 'delete'): ?>
                     La tâche a été supprimée avec succès !
                 <?php endif; ?>
             </div>
         <?php endif; ?>
+
 
         <!-- Formulaire pour ajouter ou modifier une tâche -->
         <?php if ($edit_tache): ?>
@@ -132,9 +134,11 @@ $taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <button type="submit">Ajouter</button>
             </form>
         <?php endif; ?>
-        <form id="filter-form" style="margin-bottom: 20px;">
+
+        <!-- Formulaire de filtre -->
+        <form id="filter-form" class="filter-form" style="margin-bottom: 20px;">
             <label for="filter-priorite">Filtrer par priorité :</label>
-            <select id="filter-priorite">
+            <select id="filter-priorite" class="filter-select">
                 <option value="">Toutes</option>
                 <option value="Haute">Haute</option>
                 <option value="Moyenne">Moyenne</option>
@@ -142,7 +146,7 @@ $taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </select>
 
             <label for="filter-categorie">Filtrer par catégorie :</label>
-            <select id="filter-categorie">
+            <select id="filter-categorie" class="filter-select">
                 <option value="">Toutes</option>
                 <option value="Travail">Travail</option>
                 <option value="Personnel">Personnel</option>
@@ -151,7 +155,6 @@ $taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </form>
 
         <!-- Liste des tâches -->
-        <h2>Mes tâches</h2>
         <ul>
             <?php foreach ($taches as $tache) : ?>
                 <li class="tache <?= isset($_GET['new']) && $_GET['new'] == $tache['id'] ? 'new' : '' ?>"
@@ -171,7 +174,6 @@ $taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </a>
                 </li>
             <?php endforeach; ?>
-
         </ul>
     </div>
     <script src="js/script.js"></script>
