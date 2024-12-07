@@ -169,3 +169,28 @@ form button:hover {
   border: 1px solid #c3e6cb;
   color: #155724;
 }
+/* Animation des messages */
+.alert {
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.alert.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+/* Animation pour une nouvelle tâche */
+.tache.new {
+  animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

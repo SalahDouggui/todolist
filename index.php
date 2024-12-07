@@ -53,7 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['nom_tache']) && !iss
     $stmt = $pdo->prepare($sql);
     $stmt->execute(['nom' => $nom_tache, 'categorie' => $categorie, 'priorite' => $priorite]);
 
-    header("Location: index.php");
+    $lastId = $pdo->lastInsertId();
+    header("Location: index.php?new=$lastId");
     exit;
 }
 
@@ -136,7 +137,7 @@ $taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <h2>Mes tâches</h2>
         <ul>
             <?php foreach ($taches as $tache) : ?>
-                <li class="<?= $tache['terminee'] ? 'terminee' : '' ?>">
+                <li class="tache <?= isset($_GET['new']) && $_GET['new'] == $tache['id'] ? 'new' : '' ?>">
                     <?= htmlspecialchars($tache['nom']) ?>
                     <span>(<?= htmlspecialchars($tache['categorie']) ?>)</span>
                     <span style="color: <?= $tache['priorite'] === 'Haute' ? 'red' : ($tache['priorite'] === 'Basse' ? 'green' : 'orange') ?>;">
@@ -144,14 +145,16 @@ $taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </span>
                     <a href="index.php?edit=<?= $tache['id'] ?>" style="color: blue;">Modifier</a>
                     <a href="index.php?delete=<?= $tache['id'] ?>"
+                        class="delete-link"
                         style="color: red;"
-                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?');">
+                        onclick="return confirmDeletion(this);">
                         Supprimer
                     </a>
                 </li>
             <?php endforeach; ?>
         </ul>
     </div>
+    <script src="js/script.js"></script>
 </body>
 
 </html>
